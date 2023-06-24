@@ -34,7 +34,7 @@ function Header() {
 
   function HandleProfile() {
     setAnchorEl(null);
-    navigate("/perfil");
+    navigate("/profile");
   }
 
   const [openSnack, setOpenSnack] = useState(false);
@@ -47,7 +47,7 @@ function Header() {
     if (confirmLogout) {
       try {
         const response = await Axios.post(
-          "http://localhost:8000/api-auth-djoser/token/logout/",
+          "http://139.59.186.103/api-auth-djoser/token/logout/",
           GlobalState.userToken,
           { headers: { Authorization: "Token ".concat(GlobalState.userToken) } }
         );
@@ -67,7 +67,7 @@ function Header() {
   }, [openSnack]);
 
   return (
-    <AppBar position="static" style={{ backgroundColor: "black" }}>
+    <AppBar position="static" className="custom-nav-bar">
       <Toolbar>
         <div style={{ marginRight: "auto", marginLeft: "10rem" }}>
           <Button color="inherit" onClick={() => navigate("/")}>
@@ -111,15 +111,17 @@ function Header() {
           </Button>
 
           {GlobalState.userIsLogged ? (
-            <Button className="texto-contraste botao-user-hover" onClick={handleClick}>
+            <Button
+              className="texto-contraste botao-user-hover"
+              onClick={handleClick}
+            >
               {GlobalState.userUsername}
             </Button>
           ) : (
-            <Button 
-            id="botao-login-navbar"
+            <Button
+              id="botao-login-navbar"
               variant="contained"
-            
-              className="perfil"
+              className="profile"
               onClick={() => navigate("/login")}
             >
               Login
@@ -131,14 +133,15 @@ function Header() {
             anchorEl={anchorEl}
             open={open}
             onClose={handleClose}
+            style={{ zIndex: 8001, position: "absolute" }}
             MenuListProps={{
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem className="perfil" onClick={HandleProfile}>
+            <MenuItem className="profile custom-logout" onClick={HandleProfile}>
               Perfil
             </MenuItem>
-            <MenuItem className="perfil" onClick={HandleLogout}>
+            <MenuItem className="profile custom-logout" onClick={HandleLogout}>
               Logout
             </MenuItem>
           </Menu>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { useImmerReducer } from "use-immer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
 // React leaflet
 import {
   MapContainer,
@@ -50,55 +51,14 @@ import MapIcon from "@mui/icons-material/Map";
 //Choose starting place Button Icon
 import HomeIcon from "@mui/icons-material/Home";
 // Map icons
-import houseIconPng from "./Assets/Mapicons/house.png";
-import apartmentIconPng from "./Assets/Mapicons/apartment.png";
-import officeIconPng from "./Assets/Mapicons/office.png";
+import curricularIconPng from "./Assets/Mapicons/curricular.png";
+import profissionalIconPng from "./Assets/Mapicons/profissional.png";
+import voluntarioIconPng from "./Assets/Mapicons/voluntario.png";
 // Assets
 import img1 from "./Assets/img1.jpg";
 import myListings from "./Assets/Data/Dummydata";
 
 import { useCallback, useMemo, useRef } from "react";
-const center = {
-  lat: 40.574436706354,
-  lng: -8.44588251531503,
-};
-
-function DraggableMarker() {
-  const [draggable, setDraggable] = useState(false);
-  const [position, setPosition] = useState(center);
-  const markerRef = useRef(null);
-  const eventHandlers = useMemo(
-    () => ({
-      dragend() {
-        const marker = markerRef.current;
-        if (marker != null) {
-          setPosition(marker.getLatLng());
-        }
-      },
-    }),
-    []
-  );
-  const toggleDraggable = useCallback(() => {
-    setDraggable((d) => !d);
-  }, []);
-
-  return (
-    <Marker
-      draggable={draggable}
-      eventHandlers={eventHandlers}
-      position={position}
-      ref={markerRef}
-    >
-      <Popup minWidth={90}>
-        <span onClick={toggleDraggable}>
-          {draggable
-            ? "Marker is draggable"
-            : "Click here to make marker draggable"}
-        </span>
-      </Popup>
-    </Marker>
-  );
-}
 
 function Listings() {
   const [location, setLocation] = useState({ latitude: null, longitude: null });
@@ -114,10 +74,20 @@ function Listings() {
           };
           setLocation(userLocation);
           setUserMarker(userLocation); // meter o marker
-          console.log("COORDS = " + position.coords.latitude);
+          console.log(
+            "COORDS = " +
+              position.coords.latitude +
+              "latitude:" +
+              position.coords.longitude
+          );
         },
         (error) => {
           console.error("Error occurred: " + error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
         }
       );
     } else {
@@ -125,10 +95,40 @@ function Listings() {
     }
   };
 
+  let counter = 0;
+  const limit = 11;
+  const params = useParams();
   //Funcao do button group dos filtros, mudar para mostrar os tempos diferentes - Tomás
   const ref = React.useRef(null);
   const [alignment, setAlignment] = React.useState("web");
-
+  const skillMapping = {
+    programming_lang_python: "Python",
+    programming_lang_java: "Java",
+    programming_lang_c_1: "C e C++",
+    programming_lang_c_2: "C#",
+    programming_lang_javascript: "JavaScript",
+    programming_lang_sql: "SQL",
+    programming_lang_php: "PHP",
+    programming_lang_go: "Go",
+    programming_lang_kotlin: "Kotlin",
+    programming_lang_matlab: "MATLAB",
+    programming_lang_swift: "Swift",
+    programming_lang_rust: "Rust",
+    programming_lang_ruby: "Ruby",
+    programming_lang_dart: "Dart",
+    programming_lang_scala: "Scala",
+    programming_fw_frontend_angular: "Angular",
+    programming_fw_frontend_jquery: "jQuery",
+    programming_fw_frontend_react: "React",
+    programming_fw_frontend_ruby: "Ruby on Rails",
+    programming_fw_frontend_vuejs: "Vue.js",
+    programming_fw_backend_aspnet: "ASP.Net",
+    programming_fw_backend_django: "Django",
+    programming_fw_backend_express: "Express",
+    programming_fw_backend_laravel: "Laravel",
+    programming_fw_backend_nodejs: "Node.js",
+    programming_fw_backend_spring: "Spring",
+  };
   const normalMap =
     "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png";
   const satelliteMap =
@@ -147,21 +147,20 @@ function Listings() {
   };
 
   const navigate = useNavigate();
-  const houseIcon = new Icon({
-    iconUrl: houseIconPng,
+  const curricularIcon = new Icon({
+    iconUrl: curricularIconPng,
     iconSize: [40, 40],
   });
 
-  const apartmentIcon = new Icon({
-    iconUrl: apartmentIconPng,
+  const profissionalIcon = new Icon({
+    iconUrl: profissionalIconPng,
     iconSize: [40, 40],
   });
 
-  const officeIcon = new Icon({
-    iconUrl: officeIconPng,
+  const voluntarioIcon = new Icon({
+    iconUrl: voluntarioIconPng,
     iconSize: [40, 40],
   });
-
   const initialState = {
     mapInstance: null,
   };
@@ -187,13 +186,16 @@ function Listings() {
   const [transportMode, setTransportMode] = useState("driving-car"); // define modo de transporte
   const [tempoViagem, setTempoViagem] = useState(30); // initial value
   const [filteredResults, setFilteredResults] = useState(allListings);
+  //mensagem de erro
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorColor, setErrorColor] = useState("#9e9e9e");
 
   useEffect(() => {
     const source = Axios.CancelToken.source();
     async function GetAllListings() {
       try {
         const response = await Axios.get(
-          "http://localhost:8000/api/listings/",
+          "http://139.59.186.103/api/listings/",
           { cancelToken: source.token }
         );
 
@@ -206,6 +208,22 @@ function Listings() {
     return () => {
       source.cancel();
     };
+  }, []);
+
+  useEffect(() => {
+    async function GetListingInfo() {
+      try {
+        const response = await Axios.get(
+          `http://139.59.186.103/api/listings/${params.id}/`
+        );
+
+        dispatch({
+          type: "catchListingInfo",
+          listingObject: response.data,
+        });
+      } catch (e) {}
+    }
+    GetListingInfo();
   }, []);
 
   if (dataIsLoading === true) {
@@ -240,14 +258,34 @@ function Listings() {
     return `${value} minutos`;
   }
 
+  function FlyToUserMarker({ userMarker }) {
+    const map = useMap();
+
+    React.useEffect(() => {
+      if (userMarker) {
+        map.flyTo([userMarker.latitude, userMarker.longitude], map.getZoom());
+      }
+    }, [userMarker, map]);
+
+    return null;
+  }
+
   async function fetchMatrixData() {
+    if (userMarker === null) {
+      setErrorMsg("Localização não definida!");
+      setErrorColor("#f44336");
+      return;
+    }
+
     try {
+      setErrorMsg("O tempo de viagem é em minutos");
+      setErrorColor("#9e9e9e");
       // dar fetch aos listings
-      const response = await Axios.get("http://localhost:8000/api/listings/");
+      const response = await Axios.get("http://139.59.186.103/api/listings/");
       const listings = response.data;
 
-      // preparar dados para request
-      const locations = [[location.longitude, location.latitude]];
+      // preparar dados para request (posição do utilizador)
+      const locations = [[userMarker.longitude, userMarker.latitude]];
 
       console.log("LOCATION" + locations);
       const listingIDs = [];
@@ -282,23 +320,14 @@ function Listings() {
       // filtar por destino [0] e extrair tempo que demora
       const times = matrixResponse.data.durations[0];
       console.log(times);
+      console.log(transportMode);
 
       // filtar listings < tempo
       const filteredListings = listings.filter((listing, index) => {
         // converter de segundos para minutos
         const travelTimeMinutes = times[index + 1] / 60;
-        const travelTimeSeconds = times[index + 1] % 60;
-
-        console.log(
-          "Listing: " +
-            listing +
-            " Tempo:" +
-            travelTimeMinutes +
-            " Minutos " +
-            " Segundos " +
-            travelTimeSeconds
-        );
-        return travelTimeMinutes <= tempoViagem;
+        console.log("Listing: " + listing + " Tempo:" + travelTimeMinutes);
+        return travelTimeMinutes > 0 && travelTimeMinutes <= tempoViagem;
       });
 
       console.log("Listings Filtrados <= tempo " + filteredListings);
@@ -312,14 +341,18 @@ function Listings() {
   return (
     <ThemeProvider theme={theme}>
       <Grid container>
-        <Grid item xs={4}>
+        <Grid item xs={4} className="custom-body-listings">
           {filteredResults.map((listing) => {
+            let counter = 0;
             return (
               <Card
-                className="internship-info-card"
+                className="internship-info-card component-box-shadow"
                 key={listing.id}
                 style={{
+                  cursor: "pointer",
                   backgroundImage: `url(${listing.picture1})`,
+                  display: "flex", // Set the Card as a flex container
+                  flexDirection: "column", // Set direction of elements inside card as column
                 }}
               >
                 <CardHeader
@@ -338,15 +371,24 @@ function Listings() {
                     </IconButton>
                   }
                   title={
-                    <Typography
-                      className="internship-card-title"
-                      onClick={() => navigate(`/listings/${listing.id}`)}
-                      variant="h5"
-                      color="secondary"
-                    >
-                      {listing.title}
-                      <ArrowForwardIosIcon sx={{ ml: 1 }} />
-                    </Typography>
+                    <Box>
+                      <Typography
+                        className="internship-card-title"
+                        onClick={() => navigate(`/listings/${listing.id}`)}
+                        variant="h4"
+                        color="secondary"
+                      >
+                        {listing.seller_agency_name}
+                      </Typography>
+                      <Typography
+                        className="internship-card-subtitle"
+                        onClick={() => navigate(`/listings/${listing.id}`)}
+                        variant="h5"
+                        color="secondary"
+                      >
+                        {listing.title}
+                      </Typography>
+                    </Box>
                   }
                 />
                 {/* 
@@ -358,24 +400,69 @@ function Listings() {
                   onClick={() => navigate(`/listings/${listing.id}`)}
                 />
                 */}
-                <CardContent>
-                  <Typography variant="body2">
-                    {listing.description.substring(0, 200)}
+                <CardContent
+                  style={{ flexGrow: 1 }}
+                  onClick={() => navigate(`/listings/${listing.id}`)}
+                >
+                  <Typography variant="body1">
+                    Estágio {listing.listing_type}{" "}
+                    {listing.total_hours && `- ${listing.total_hours} horas`}
                   </Typography>
-                  <Chip label="React" color="error" className="react" />
-                  <Chip label="Angular" color="error" className="angular" />
+                  <Typography variant="body1">
+                    {listing.internship_status}
+                  </Typography>
+                  <Typography variant="body2">
+                    {listing.description.length > 100
+                      ? `${listing.description.substring(0, 100)}...`
+                      : listing.description}
+                  </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
+                <CardActions
+                  onClick={() => navigate(`/listings/${listing.id}`)}
+                  disableSpacing
+                >
+                  {/* 
                   <IconButton aria-label="add to favorites">
                     {listing.seller_agency_name}
                   </IconButton>
+                  */}
+                  <Grid container spacing={1}>
+                    {Object.keys(skillMapping).map((skill) => {
+                      if (counter >= limit) return null;
+                      if (listing[skill]) {
+                        counter++;
+                        return (
+                          <Grid item>
+                            <Chip
+                              label={skillMapping[skill]}
+                              color="primary"
+                              className={`${skillMapping[skill]
+                                .toLowerCase()
+                                .replace(/\s+/g, "")
+                                .replace(/\./g, "")} chip-text-color`}
+                            />
+                          </Grid>
+                        );
+                      }
+                      return null;
+                    })}
+                    {counter === limit ? (
+                      <Grid item>
+                        <Chip
+                          label="..."
+                          color="primary"
+                          className="chip-text-color"
+                        />
+                      </Grid>
+                    ) : null}
+                  </Grid>
                 </CardActions>
               </Card>
             );
           })}
         </Grid>
 
-        <Grid item xs={8} style={{ marginTop: "0.5rem", position: "relative" }}>
+        <Grid item xs={8} style={{ position: "relative" }}>
           <AppBar position="sticky">
             <div style={{ height: "100vh" }}>
               <div className="filter-container">
@@ -396,7 +483,7 @@ function Listings() {
                                 newTransportMode = "foot-walking"; //caminhar
                                 break;
                               case "bike":
-                                newTransportMode = "cycling-road"; //bicicleta
+                                newTransportMode = "cycling-regular"; //bicicleta
                                 break;
                               case "driving":
                                 newTransportMode = "driving-car"; //carro
@@ -485,18 +572,13 @@ function Listings() {
                           } // update the state when the value changes
                         />
                         <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox defaultChecked />}
-                            label={
-                              <Typography
-                                sx={{ fontSize: 14 }}
-                                variant="body1"
-                                color="text.secondary"
-                              >
-                                Ver empresas sem ofertas
-                              </Typography>
-                            }
-                          />
+                          <Typography
+                            sx={{ fontSize: 14 }}
+                            variant="body1"
+                            color={errorColor}
+                          >
+                            {errorMsg || "O tempo de viagem é em minutos"}
+                          </Typography>
                         </FormGroup>
                       </div>
                     </CardContent>
@@ -571,24 +653,27 @@ function Listings() {
                 zoom={12}
                 scrollWheelZoom={true}
               >
+                <FlyToUserMarker userMarker={userMarker} />
                 <TileLayer
                   ref={ref}
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url={mapLayer ? normalMap : satelliteMap}
                 />
-                <DraggableMarker />
                 <TheMapComponent />
 
                 {filteredResults.map((listing) => {
                   function IconDisplay() {
-                    if (listing.listing_type === "House") {
-                      return houseIcon;
-                    } else if (listing.listing_type === "Apartment") {
-                      return apartmentIcon;
-                    } else if (listing.listing_type === "Office") {
-                      return officeIcon;
+                    if (listing.listing_type === "Curricular") {
+                      return curricularIcon;
+                      return curricularIcon;
+                    } else if (listing.listing_type === "Profissional") {
+                      return profissionalIcon;
+                      return profissionalIcon;
+                    } else if (listing.listing_type === "Voluntário") {
+                      return voluntarioIcon;
                     }
                   }
+
                   return (
                     <Marker
                       key={listing.id}
@@ -620,15 +705,29 @@ function Listings() {
                     </Marker>
                   );
                 })}
-              
+
                 {userMarker && (
                   <Marker
                     position={[userMarker.latitude, userMarker.longitude]}
+                    draggable={true}
+                    eventHandlers={{
+                      dragend: (event) => {
+                        const newLatLng = event.target.getLatLng();
+                        setUserMarker({
+                          latitude: newLatLng.lat,
+                          longitude: newLatLng.lng,
+                        });
+                        console.log(
+                          userMarker.latitude +
+                            "longitude:" +
+                            userMarker.longitude
+                        );
+                      },
+                    }}
                   >
                     <Popup>A tua casa esta aqui!</Popup>
                   </Marker>
                 )}
-
               </MapContainer>
             </div>
           </AppBar>

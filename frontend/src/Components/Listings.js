@@ -195,7 +195,7 @@ function Listings() {
     async function GetAllListings() {
       try {
         const response = await Axios.get(
-          "http://139.59.186.103/api/listings/",
+          "http://uaestagios.com/api/listings/",
           { cancelToken: source.token }
         );
 
@@ -214,7 +214,7 @@ function Listings() {
     async function GetListingInfo() {
       try {
         const response = await Axios.get(
-          `http://139.59.186.103/api/listings/${params.id}/`
+          `http://uaestagios.com/api/listings/${params.id}/`
         );
 
         dispatch({
@@ -281,7 +281,7 @@ function Listings() {
       setErrorMsg("O tempo de viagem é em minutos");
       setErrorColor("#9e9e9e");
       // dar fetch aos listings
-      const response = await Axios.get("http://139.59.186.103/api/listings/");
+      const response = await Axios.get("http://uaestagios.com/api/listings/");
       const listings = response.data;
 
       // preparar dados para request (posição do utilizador)

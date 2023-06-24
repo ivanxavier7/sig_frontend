@@ -68,7 +68,7 @@ function Profile() {
 		async function GetProfileInfo() {
 			try {
 				const response = await Axios.get(
-					`http://139.59.186.103/api/profiles/${GlobalState.userId}/`
+					`http://uaestagios.com/api/profiles/${GlobalState.userId}/`
 				);
 
 				dispatch({

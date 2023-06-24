@@ -1208,7 +1208,7 @@ function AddProperty() {
     async function GetProfileInfo() {
       try {
         const response = await Axios.get(
-          `http://139.59.186.103/api/profiles/${GlobalState.userId}/`
+          `http://uaestagios.com/api/profiles/${GlobalState.userId}/`
         );
 
         dispatch({
@@ -1385,7 +1385,7 @@ function AddProperty() {
 
         try {
           const response = await Axios.post(
-            "http://139.59.186.103/api/listings/create/",
+            "http://uaestagios.com/api/listings/create/",
             formData
           );
 

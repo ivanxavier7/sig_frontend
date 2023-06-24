@@ -114,7 +114,7 @@ function ProfileUpdate(props) {
 
         try {
           const response = await Axios.patch(
-            `http://139.59.186.103/api/profiles/${GlobalState.userId}/update/`,
+            `http://uaestagios.com/api/profiles/${GlobalState.userId}/update/`,
             formData
           );
 

@@ -73,7 +73,7 @@ export default function Footer() {
         <Box mt={5}>
           <Typography className="footer-text " variant="body2" color="text.secondary" align="center">
             {"Copyright © "}
-            <Link color="inherit" href="http://139.59.186.103" className="copyrights-ua">
+            <Link color="inherit" href="http://ua-estagios.com" className="copyrights-ua">
               Estágios UA
             </Link>{" "}
             {new Date().getFullYear()}

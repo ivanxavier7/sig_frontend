@@ -567,7 +567,7 @@ function ListingUpdate(props) {
 
 				try {
 					const response = await Axios.patch(
-						`http://139.59.186.103/api/listings/${props.listingData.id}/update/`,
+						`http://uaestagios.com/api/listings/${props.listingData.id}/update/`,
 						formData
 					);
 

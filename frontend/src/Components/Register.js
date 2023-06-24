@@ -174,7 +174,7 @@ function Register() {
       async function SignUp() {
         try {
           const response = await Axios.post(
-            "http://139.59.186.103/api-auth-djoser/users/",
+            "http://uaestagios.com/api-auth-djoser/users/",
             {
               username: state.usernameValue,
               email: state.emailValue,

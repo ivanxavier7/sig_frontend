@@ -71,7 +71,7 @@ function AgencyDetail() {
     async function GetProfileInfo() {
       try {
         const response = await Axios.get(
-          `http://139.59.186.103/api/profiles/${params.id}/`
+          `http://uaestagios.com/api/profiles/${params.id}/`
         );
 
         dispatch({
@@ -215,7 +215,7 @@ function AgencyDetail() {
                   height="140"
                   image={
                     listing.picture1
-                      ? "http://139.59.186.103" + listing.picture1
+                      ? "http://uaestagios.com" + listing.picture1
                       : defaultProfilePicture
                   }
                   alt="Listing Picture"

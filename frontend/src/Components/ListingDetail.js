@@ -182,7 +182,7 @@ function ListingDetail() {
     async function GetListingInfo() {
       try {
         const response = await Axios.get(
-          `http://139.59.186.103/api/listings/${params.id}/`
+          `http://uaestagios.com/api/listings/${params.id}/`
         );
 
         dispatch({
@@ -200,7 +200,7 @@ function ListingDetail() {
       async function GetProfileInfo() {
         try {
           const response = await Axios.get(
-            `http://139.59.186.103/api/profiles/${state.listingInfo.seller}/`
+            `http://uaestagios.com/api/profiles/${state.listingInfo.seller}/`
           );
 
           dispatch({
@@ -252,7 +252,7 @@ function ListingDetail() {
     if (confirmDelete) {
       try {
         const response = await Axios.delete(
-          `http://139.59.186.103/api/listings/${params.id}/delete/`
+          `http://uaestagios.com/api/listings/${params.id}/delete/`
         );
 
         dispatch({ type: "openTheSnack" });

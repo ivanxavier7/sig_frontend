@@ -47,7 +47,7 @@ function Header() {
     if (confirmLogout) {
       try {
         const response = await Axios.post(
-          "http://uaestagios.com/api-auth-djoser/token/logout/",
+          "https://www.uaestagios.com/api-auth-djoser/token/logout/",
           GlobalState.userToken,
           { headers: { Authorization: "Token ".concat(GlobalState.userToken) } }
         );

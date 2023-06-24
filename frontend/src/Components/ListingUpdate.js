@@ -567,7 +567,7 @@ function ListingUpdate(props) {
 
 				try {
 					const response = await Axios.patch(
-						`http://uaestagios.com/api/listings/${props.listingData.id}/update/`,
+						`https://www.uaestagios.com/api/listings/${props.listingData.id}/update/`,
 						formData
 					);
 

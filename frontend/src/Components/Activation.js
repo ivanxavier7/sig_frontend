@@ -32,7 +32,7 @@ function Activation() {
 	async function ActivationHandler() {
 		try {
 			const response = await Axios.post(
-				"http://uaestagios.com/api-auth-djoser/users/activation/",
+				"https://www.uaestagios.com/api-auth-djoser/users/activation/",
 				{
 					uid: params.uid,
 					token: params.token,

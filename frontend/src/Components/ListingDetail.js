@@ -182,7 +182,7 @@ function ListingDetail() {
     async function GetListingInfo() {
       try {
         const response = await Axios.get(
-          `http://uaestagios.com/api/listings/${params.id}/`
+          `https://www.uaestagios.com/api/listings/${params.id}/`
         );
 
         dispatch({
@@ -200,7 +200,7 @@ function ListingDetail() {
       async function GetProfileInfo() {
         try {
           const response = await Axios.get(
-            `http://uaestagios.com/api/profiles/${state.listingInfo.seller}/`
+            `https:/www.uaestagios.com/api/profiles/${state.listingInfo.seller}/`
           );
 
           dispatch({
@@ -252,7 +252,7 @@ function ListingDetail() {
     if (confirmDelete) {
       try {
         const response = await Axios.delete(
-          `http://uaestagios.com/api/listings/${params.id}/delete/`
+          `https://www.uaestagios.com/api/listings/${params.id}/delete/`
         );
 
         dispatch({ type: "openTheSnack" });

@@ -57,7 +57,7 @@ function Empresas() {
     async function GetEmpresas() {
       try {
         const response = await Axios.get(
-          `http://uaestagios.com/api/profiles/`
+          `https://www.uaestagios.com/api/profiles/`
         );
 
         dispatch({

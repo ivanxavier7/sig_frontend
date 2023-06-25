@@ -212,7 +212,7 @@ function AgencyDetail() {
               >
                 <CardMedia
                   component="img"
-                  height="140"
+                  height="20rem"
                   image={
                     listing.picture1
                       ? listing.picture1

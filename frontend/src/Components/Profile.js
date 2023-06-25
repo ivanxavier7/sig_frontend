@@ -134,6 +134,7 @@ function Profile() {
           <Card sx={{ width: "100%" }}>
             <CardMedia
               sx={{ height: 140 }}
+              style={{ height: "20rem" }}
               image={
                 state.userProfile.profilePic !== null
                   ? state.userProfile.profilePic

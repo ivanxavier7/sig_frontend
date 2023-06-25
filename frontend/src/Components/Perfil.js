@@ -142,6 +142,7 @@ function Profile() {
 					<Grid item xs={4}>
 						<img
 							className="image"
+							style={{ height: "20rem" }}
 							src={
 								state.userProfile.profilePic !== null
 									? state.userProfile.profilePic

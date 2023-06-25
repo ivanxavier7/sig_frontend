@@ -111,7 +111,7 @@ function AgencyDetail() {
         <Card className="component-box-shadow-no-hover" sx={{ width: "40rem" }}>
           <CardMedia
             component="img"
-            height="140"
+            style={{ height: "20rem" }}
             image={
               state.userProfile.profilePic !== null
                 ? state.userProfile.profilePic

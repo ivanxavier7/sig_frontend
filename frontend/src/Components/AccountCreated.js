@@ -30,18 +30,11 @@ function AccountCreated() {
 
 	return (
 		<div
-			style={{
-				width: "50%",
-				marginLeft: "auto",
-				marginRight: "auto",
-				marginTop: "3rem",
-				border: "5px solid black",
-				padding: "3rem",
-			}}
+			className="custom-body custom-spacer"
 		>
 			<Typography variant="h4">
-				Thanks for signing up! To activate your account, please click on the
-				link that has been sent to you!
+			Obrigado por inscrever-se! Para ativar sua conta, clique no link
+			que foi enviado por email!
 			</Typography>
 		</div>
 	);

@@ -44,17 +44,10 @@ function Activation() {
 
 	return (
 		<div
-			style={{
-				width: "50%",
-				marginLeft: "auto",
-				marginRight: "auto",
-				marginTop: "3rem",
-				border: "5px solid black",
-				padding: "3rem",
-			}}
+		className="custom-body custom-spacer"
 		>
 			<Typography variant="h4">
-				Please click on the button below to activate your account!
+				Carregue no botão abaixo para activar a sua conta!
 			</Typography>
 			<Button
 				variant="contained"
@@ -62,7 +55,7 @@ function Activation() {
 				style={{ marginTop: "1rem" }}
 				onClick={ActivationHandler}
 			>
-				ACTIVATE
+				ACTIVAR
 			</Button>
 		</div>
 	);

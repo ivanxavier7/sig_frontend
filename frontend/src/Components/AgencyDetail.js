@@ -215,7 +215,7 @@ function AgencyDetail() {
                   height="140"
                   image={
                     listing.picture1
-                      ? "https://www.uaestagios.com" + listing.picture1
+                      ? listing.picture1
                       : defaultProfilePicture
                   }
                   alt="Listing Picture"

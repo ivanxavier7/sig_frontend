@@ -223,7 +223,7 @@ function Register() {
     if (state.openSnack) {
       setTimeout(() => {
         //created
-        navigate("/login");
+        navigate("/created");
       }, 1500);
     }
   }, [state.openSnack]);
